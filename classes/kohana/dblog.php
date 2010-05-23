@@ -29,14 +29,12 @@ abstract class Kohana_DBlog {
 		$data['type'] = strtoupper($type);
 		$data['message'] = strtr($message, $substitutionValues);
 		$data['details'] = strtr($details, $substitutionValues);
-		$query = DB::insert(
-			self::getInstance()->tableName,
-			array_keys($data)
-		);
-		$query->values(array_values($data));
+		self::getInstance()->validate($data);
+		$query = self::getInstance()->getInsertQuery($data);
 		self::getInstance()->execInsertQuery($query);
 		unset($query, $data);
 	}
+
 	public static function addKohanaMessage($type, $message, $time) {
 		// TODO check time format
 		self::add(
@@ -48,7 +46,14 @@ abstract class Kohana_DBlog {
 		);
 	}
 
-	protected function execInsertQuery($query) {
+	protected function getInsertQuery(array $data) {
+		return DB::insert(
+			self::getInstance()->tableName,
+			array_keys($data)
+		)->values(array_values($data));
+	}
+
+	protected function execInsertQuery(Database_Query_Builder_Insert $query) {
 		try {
 			$query->execute();
 		} catch (Database_Exception $e) {
@@ -56,22 +61,20 @@ abstract class Kohana_DBlog {
 		}
 	}
 
+	protected function validate(array $logData) {
+		foreach ($logData as &$value)
+			if (! is_string($value) && ! is_int($value))
+				$this->handleInvalidDataException(new Kohana_Exception('Can only log string/int values, but got a :type.', array(':type' => gettype($value))));
+	}
+
 	protected function mergeAdditionalData(array $additionalData) {
 		$data = $this->defaultsForAdditionalFields;
-		try {
-			foreach ($additionalData as $key => &$value) {
-				if (! is_string($value)) {
-					throw new Kohana_Exception('Only string values can be logged. Received a :type.', array(':type' =>gettype($value)));
-				}
-				$data[$key] = $value;
-			}
-		} catch (Kohana_Exception $e) {
-			$this->handleInvalidLogDataException($e);
-		}
+		foreach ($additionalData as $key => &$value)
+			$data[$key] = $value;
 		return $data;
 	}
 
-	protected function handleInvalidLogDataException(Kohana_Exception $e) {
+	protected function handleInvalidDataException(Kohana_Exception $e) {
 		throw $e;
 	}
 
