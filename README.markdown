@@ -9,6 +9,17 @@
 
 # Installation
 
+Register the module in bootstrap.php:
+
+	Kohana::modules(array(
+		[...]
+		'dblog'      => MODPATH.'dblog',
+	));
+
+Create a database table, based on default.sql. Additional fields can be added.
+
+If you want to store all Kohana::$log messages in the database too:
+
 1.	In bootstrap.php change
 
 		Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
@@ -17,11 +28,15 @@
 
 		Kohana::$log->attach(new Kohana_Log_Db());
 
+	**Make sure this line appears after the call of Kohana::modules().**
+
 2.	In the same file add
 
 		Kohana_Log::$timestamp = 'U';
 
-# Configuration (?)
+# Configuration
+
+If you don't use the default database table name "log", then copy the file *modules/dblog/config/dblog.php* to *application/config/dblog.php* and edit the config key "db_table_name".
 
 # Using additional fields
 

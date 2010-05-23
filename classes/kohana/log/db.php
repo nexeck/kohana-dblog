@@ -15,6 +15,9 @@ class Kohana_Log_Db extends Kohana_Log_Writer {
 	 * @return  void
 	 */
 	public function write(array $messages) {
+		foreach ($messages as $message) {
+			DBlog::addKohanaMessage($message['type'], $message['body'], $message['time']);
+		}
 	}
 
 }
