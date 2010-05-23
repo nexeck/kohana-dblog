@@ -10,7 +10,7 @@ abstract class Kohana_DBlog {
 	protected static $instance;
 
 	protected $tableName;
-	protected $defaultsForAdditionalFields = array();
+	protected $defaultValues;
 
 	/**
 	 * @param   string  type of message
@@ -20,30 +20,30 @@ abstract class Kohana_DBlog {
 	 * @param   array   values for additional fields, which must exist in the db table
 	 * @return  void
 	 */
-	public static function add(
-		$type, $message,
-		$details = '', array $substitutionValues = array(), array $additionalData = array()) {
-		$data = self::getInstance()->mergeAdditionalData($additionalData);
+	public static function add($type,
+	                           $message,
+	                           $details = '',
+	                     array $substitutionValues = array(),
+	                     array $additionalData = array()) {
+		$instance = self::getInstance();
+		$data = $instance->mergeAdditionalData($additionalData);
 		if (! isset($data['tstamp']))
 			$data['tstamp'] = time();
-		$data['type'] = strtoupper($type);
-		$data['message'] = strtr($message, $substitutionValues);
-		$data['details'] = strtr($details, $substitutionValues);
-		self::getInstance()->validate($data);
-		$query = self::getInstance()->getInsertQuery($data);
-		self::getInstance()->execInsertQuery($query);
-		unset($query, $data);
+		try {
+			$data['type'] = strtoupper($type);
+			$data['message'] = strtr($message, $substitutionValues);
+			$data['details'] = strtr($details, $substitutionValues);
+		} catch (ErrorException $e) {
+			$instance->handleInvalidDataException(new Kohana_Exception('Parameter or substitution error.'));
+		}
+		$instance->validate($data);
+		$instance->execInsertQuery($instance->getInsertQuery($data));
+		unset($instance, $data);
 	}
 
 	public static function addKohanaMessage($type, $message, $time) {
 		// TODO check time format
-		self::add(
-			$type,
-			$message,
-			'',
-			array(),
-			array('tstamp' => $time)
-		);
+		self::add($type, $message, '', array(), array('tstamp' => $time));
 	}
 
 	protected function getInsertQuery(array $data) {
@@ -68,7 +68,7 @@ abstract class Kohana_DBlog {
 	}
 
 	protected function mergeAdditionalData(array $additionalData) {
-		$data = $this->defaultsForAdditionalFields;
+		$data = $this->defaultValues;
 		foreach ($additionalData as $key => &$value)
 			$data[$key] = $value;
 		return $data;
@@ -91,6 +91,11 @@ abstract class Kohana_DBlog {
 
 	protected function __construct() {
 		$this->tableName = Kohana::config('dblog')->db_table_name;
+		$this->defaultValues = array(
+			'type' => '[type]',
+			'message' => '[message]',
+			'details' => '[details]',
+		);
 	}
 
 	protected function __clone() {}
