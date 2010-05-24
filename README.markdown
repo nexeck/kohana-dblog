@@ -49,3 +49,8 @@ If you don't use the default database table name "log", then copy the file *modu
 	DBlog::add('category', 'title', 'details', array(
 		'myVarDump' => $myVar,
 	));
+
+# License
+
+(c) 2010 Bastian Bräu
+[Released under the ISC License](http://opensource.org/licenses/isc-license.txt)

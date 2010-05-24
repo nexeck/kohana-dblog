@@ -2,8 +2,6 @@
 /**
  * @package    Kohana/dblog
  * @author     Bastian Bräu
- * @copyright  (c) 2010 Bastian Bräu
- * @license    ISC http://opensource.org/licenses/isc-license.txt
  */
 abstract class Kohana_DBlog {
 
