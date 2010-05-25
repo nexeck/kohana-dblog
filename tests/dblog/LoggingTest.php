@@ -49,6 +49,18 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 		$this->dbCleanup($result[0]['id']);
 	}
 
+	public function testNonexistantAdditionalField() {
+		$type = 'test';
+		$message = uniqid();
+		$additionalFields = array('idontexist' => 'novalue');
+		try {
+			DBlog::add($type, $message, '', array(), $additionalFields);
+		} catch (Database_Exception $e) {
+			return;
+		}
+		$this->fail('Invalid additional field should have thrown an exception.');
+	}
+
 	protected function dbCleanup($id) {
 		DB::delete($this->dbTableName)->where('id', '=', $id)->execute();
 	}

@@ -1,7 +1,7 @@
 <phpunit colors="true" bootstrap="../../../public/index.php">
 	<testsuites>
 		<testsuite name="DBlog tests">
-			<file>tests.php</file>
+			<directory>dblog</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

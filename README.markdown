@@ -4,8 +4,8 @@
 
 # Requirements
 
--	Database module
--	Pagination module, if default view is used
+-	[Database module](http://github.com/kohana/database)
+-	[Pagination module](http://github.com/kohana/pagination), if default view is used
 
 # Installation
 
@@ -52,5 +52,4 @@ If you don't use the default database table name "log", then copy the file *modu
 
 # License
 
-(c) 2010 Bastian Bräu
-[Released under the ISC License](http://opensource.org/licenses/isc-license.txt)
+[ISC License](http://opensource.org/licenses/isc-license.txt)
