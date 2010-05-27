@@ -1,13 +1,15 @@
-# Status
+# Kohana database log writer
 
-## alpha
+## Status
 
-# Requirements
+### alpha
+
+## Requirements
 
 -	[Database module](http://github.com/kohana/database)
 -	[Pagination module](http://github.com/kohana/pagination), if default view is used
 
-# Installation
+## Installation
 
 Register the module in bootstrap.php:
 
@@ -34,29 +36,29 @@ If you want to store all Kohana::$log messages in the database too:
 
 		Kohana_Log::$timestamp = 'U';
 
-# Configuration
+## Configuration
 
 If you don't use the default database table name "log", then copy the file *modules/dblog/config/dblog.php* to *application/config/dblog.php* and edit the config key "db_table_name".
 
-# Using additional fields
+## Using additional fields
 
-## Setting a default value (e.g. in bootstrap.php)
+### Setting a default value (e.g. in bootstrap.php)
 
 	DBlog::setAdditionalField('ip', getenv('REMOTE_ADDR'));
 
-## Setting values on a per entry basis
+### Setting values on a per entry basis
 
 	DBlog::add('category', 'title', 'details', array(
 		'myVarDump' => $myVar,
 	));
 
-# View
+## View
 
 Storing the rendered view of all log entries in *$log_table*:
 
 	$log_table = Request::factory('dblog/index')->execute()->response;
 
-# Unit tests
+## Unit tests
 
 In bootstrap.php change
 
@@ -84,6 +86,6 @@ to
 		Kohana::$environment = Kohana::TESTING;
 	}
 
-# License
+## License
 
 [ISC License](http://opensource.org/licenses/isc-license.txt)
