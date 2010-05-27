@@ -41,6 +41,7 @@ abstract class Kohana_DBlog {
 
 	public static function addKohanaMessage($type, $message, $time) {
 		// TODO check time format
+		// TODO (?) split message on first : and use remainder as details
 		self::add($type, $message, '', array(), array('tstamp' => $time));
 	}
 

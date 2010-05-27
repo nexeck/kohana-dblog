@@ -50,6 +50,12 @@ If you don't use the default database table name "log", then copy the file *modu
 		'myVarDump' => $myVar,
 	));
 
+# View
+
+Storing the rendered view of all log entries in *$log_table*:
+
+	$log_table = Request::factory('dblog/index')->execute()->response;
+
 # Unit tests
 
 In bootstrap.php change
