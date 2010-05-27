@@ -88,12 +88,21 @@ abstract class Kohana_DBlog {
 	}
 
 	protected function __construct() {
-		$this->tableName = Kohana::config('dblog')->db_table_name;
+		$this->tableName = $this->getTableNameFromConfig();
 		$this->defaultValues = array(
 			'type' => '[type]',
 			'message' => '[message]',
 			'details' => '[details]',
 		);
+	}
+
+	protected function getTableNameFromConfig() {
+		switch (Kohana::$environment) {
+			case Kohana::TESTING:
+				return Kohana::config('dblog.testing.db_table_name');
+			default:
+				return Kohana::config('dblog.default.db_table_name');
+		}
 	}
 
 	protected function __clone() {}

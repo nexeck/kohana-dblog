@@ -1,6 +1,6 @@
 # Status
 
-## pre-alpha
+## alpha
 
 # Requirements
 
@@ -49,6 +49,34 @@ If you don't use the default database table name "log", then copy the file *modu
 	DBlog::add('category', 'title', 'details', array(
 		'myVarDump' => $myVar,
 	));
+
+# Unit tests
+
+In bootstrap.php change
+
+	/**
+	* Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
+	* If no source is specified, the URI will be automatically detected.
+	*/
+	echo Request::instance()
+		->execute()
+		->send_headers()
+		->response;
+
+to
+
+	if (! class_exists('PHPUnit_Util_Filter', FALSE)) {
+		/**
+		* Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
+		* If no source is specified, the URI will be automatically detected.
+		*/
+		echo Request::instance()
+			->execute()
+			->send_headers()
+			->response;
+	} else {
+		Kohana::$environment = Kohana::TESTING;
+	}
 
 # License
 

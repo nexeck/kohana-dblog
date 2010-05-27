@@ -2,6 +2,12 @@
 
 return array(
 
-	'db_table_name' => 'log',
+	'default' => array(
+		'db_table_name' => 'log',
+	),
+
+	'testing' => array(
+		'db_table_name' => 'logtest',
+	),
 
 );

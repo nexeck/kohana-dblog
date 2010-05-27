@@ -5,7 +5,7 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 	protected $dbTableName;
 
 	protected function setUp() {
-		$this->dbTableName = Kohana::config('dblog')->db_table_name;
+		$this->dbTableName = Kohana::config('dblog.testing.db_table_name');
 	}
 
 	public function testRequiredParametersDbInsert() {
@@ -50,15 +50,53 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testNonexistantAdditionalField() {
-		$type = 'test';
 		$message = uniqid();
 		$additionalFields = array('idontexist' => 'novalue');
 		try {
-			DBlog::add($type, $message, '', array(), $additionalFields);
+			DBlog::add('test', $message, '', array(), $additionalFields);
 		} catch (Database_Exception $e) {
 			return;
 		}
 		$this->fail('Invalid additional field should have thrown an exception.');
+	}
+
+	public function testInvalidAdditionalFields() {
+		$type = 'test';
+		$message = uniqid();
+		$additionalFields = array(
+			'addint' => 'xyz',
+		);
+		DBlog::add($type, $message, '', array(), $additionalFields);
+		try {
+			$result = DB::select('*')->from($this->dbTableName)->where('message', '=', $message)->execute()->as_array();
+		} catch (Database_Exception $e) {
+			$this->fail('Database error: '.$e->getMessage());
+		}
+		if (count($result) != 1)
+			$this->fail('Expected exactly 1 row as result.');
+		$this->assertNotEquals('xyz', $result[0]['addint'], 'Received string value from integer database field.');
+		$this->assertEquals('0', $result[0]['addint']);
+		$this->dbCleanup($result[0]['id']);
+	}
+
+	public function testValidAdditionalFields() {
+		$type = 'test';
+		$message = uniqid();
+		$additionalFields = array(
+			'addint' => '123',
+			'addtext' => 'xyz',
+		);
+		DBlog::add($type, $message, '', array(), $additionalFields);
+		try {
+			$result = DB::select('*')->from($this->dbTableName)->where('message', '=', $message)->execute()->as_array();
+		} catch (Database_Exception $e) {
+			$this->fail('Database error: '.$e->getMessage());
+		}
+		if (count($result) != 1)
+			$this->fail('Expected exactly 1 row as result.');
+		$this->assertEquals('123', $result[0]['addint']);
+		$this->assertEquals('xyz', $result[0]['addtext']);
+		$this->dbCleanup($result[0]['id']);
 	}
 
 	protected function dbCleanup($id) {
