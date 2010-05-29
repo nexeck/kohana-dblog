@@ -8,7 +8,6 @@ abstract class Kohana_DBlog {
 	protected static $instance;
 
 	protected $tableName;
-	protected $defaultValues;
 
 	/**
 	 * @param   string  type of message
@@ -23,61 +22,26 @@ abstract class Kohana_DBlog {
 	                           $details = '',
 	                     array $substitutionValues = array(),
 	                     array $additionalData = array()) {
-		$instance = self::getInstance();
-		$data = $instance->mergeAdditionalData($additionalData);
-		if (! isset($data['tstamp']))
-			$data['tstamp'] = time();
 		try {
-			$data['type'] = strtoupper($type);
-			$data['message'] = strtr($message, $substitutionValues);
-			$data['details'] = strtr($details, $substitutionValues);
-		} catch (ErrorException $e) {
-			$instance->handleInvalidDataException(new Kohana_Exception('Parameter or substitution error.'));
+			Model_DBlog_Entry::factory(self::getInstance()->tableName)
+				->setType($type)
+				->setMessage($message)
+				->setDetails($details)
+				->setSubstitutionValues($substitutionValues)
+ 				->setAdditionalData($additionalData)
+				->save();
+		} catch (Exception $e) {
+			self::getInstance()->handleException(new DBlog_Exception('Log entry could not be saved: '.$e->getMessage()));
 		}
-		$instance->validate($data);
-		$instance->execInsertQuery($instance->getInsertQuery($data));
-		unset($instance, $data);
 	}
 
 	public static function addKohanaMessage($type, $message, $time) {
-		// TODO check time format
+		// TODO check time format (unix time stamp)
 		// TODO (?) split message on first : and use remainder as details
 		self::add($type, $message, '', array(), array('tstamp' => $time));
 	}
 
-	protected function getInsertQuery(array $data) {
-		return DB::insert(
-			self::getInstance()->tableName,
-			array_keys($data)
-		)->values(array_values($data));
-	}
-
-	protected function execInsertQuery(Database_Query_Builder_Insert $query) {
-		try {
-			$query->execute();
-		} catch (Database_Exception $e) {
-			$this->handleDatabaseException($e);
-		}
-	}
-
-	protected function validate(array $logData) {
-		foreach ($logData as &$value)
-			if (! is_string($value) && ! is_int($value))
-				$this->handleInvalidDataException(new Kohana_Exception('Can only log string/int values, but got a :type.', array(':type' => gettype($value))));
-	}
-
-	protected function mergeAdditionalData(array $additionalData) {
-		$data = $this->defaultValues;
-		foreach ($additionalData as $key => &$value)
-			$data[$key] = $value;
-		return $data;
-	}
-
-	protected function handleInvalidDataException(Kohana_Exception $e) {
-		throw $e;
-	}
-
-	protected function handleDatabaseException(Database_Exception $e) {
+	protected function handleException(DBlog_Exception $e) {
 		throw $e;
 	}
 
@@ -90,11 +54,6 @@ abstract class Kohana_DBlog {
 
 	protected function __construct() {
 		$this->tableName = $this->getTableNameFromConfig();
-		$this->defaultValues = array(
-			'type' => '[type]',
-			'message' => '[message]',
-			'details' => '[details]',
-		);
 	}
 
 	protected function getTableNameFromConfig() {

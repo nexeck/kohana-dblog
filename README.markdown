@@ -7,6 +7,7 @@
 ## Requirements
 
 -	[Database module](http://github.com/kohana/database)
+-	[ORM module](http://github.com/kohana/orm) or alternative
 -	[Pagination module](http://github.com/kohana/pagination), if default view is used
 
 ## Installation

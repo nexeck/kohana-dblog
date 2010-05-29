@@ -18,8 +18,7 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 		} catch (Database_Exception $e) {
 			$this->fail('Database error: '.$e->getMessage());
 		}
-		if (count($result) != 1)
-			$this->fail('Expected exactly 1 row as result.');
+		$this->assertEquals(1, count($result), 'Expected exactly 1 row as result.');
 		$this->assertEquals(strtoupper($type), $result[0]['type']);
 		$this->assertEquals('', $result[0]['details']);
 		$this->dbCleanup($result[0]['id']);
@@ -42,8 +41,7 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 		} catch (Database_Exception $e) {
 			$this->fail('Database error: '.$e->getMessage());
 		}
-		if (count($result) != 1)
-			$this->fail('Expected exactly 1 row as result.');
+		$this->assertEquals(1, count($result), 'Expected exactly 1 row as result.');
 		$this->assertEquals(strtoupper($type), $result[0]['type']);
 		$this->assertEquals($details, $result[0]['details']);
 		$this->dbCleanup($result[0]['id']);
@@ -54,7 +52,7 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 		$additionalFields = array('idontexist' => 'novalue');
 		try {
 			DBlog::add('test', $message, '', array(), $additionalFields);
-		} catch (Database_Exception $e) {
+		} catch (Exception $e) {
 			return;
 		}
 		$this->fail('Invalid additional field should have thrown an exception.');
@@ -72,8 +70,7 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 		} catch (Database_Exception $e) {
 			$this->fail('Database error: '.$e->getMessage());
 		}
-		if (count($result) != 1)
-			$this->fail('Expected exactly 1 row as result.');
+		$this->assertEquals(1, count($result), 'Expected exactly 1 row as result.');
 		$this->assertNotEquals('xyz', $result[0]['addint'], 'Received string value from integer database field.');
 		$this->assertEquals('0', $result[0]['addint']);
 		$this->dbCleanup($result[0]['id']);
@@ -92,8 +89,7 @@ class DBlog_LoggingTest extends PHPUnit_Framework_TestCase {
 		} catch (Database_Exception $e) {
 			$this->fail('Database error: '.$e->getMessage());
 		}
-		if (count($result) != 1)
-			$this->fail('Expected exactly 1 row as result.');
+		$this->assertEquals(1, count($result), 'Expected exactly 1 row as result.');
 		$this->assertEquals('123', $result[0]['addint']);
 		$this->assertEquals('xyz', $result[0]['addtext']);
 		$this->dbCleanup($result[0]['id']);
