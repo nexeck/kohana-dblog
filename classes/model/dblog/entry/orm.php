@@ -2,6 +2,8 @@
 /**
  * @package    Kohana/dblog
  * @author     Bastian Bräu
+ * @todo       Move all the logic which is not ORM related to a seperate class
+ *             so that other implementation can use it.
  */
 class Model_DBlog_Entry_ORM extends ORM implements Model_DBlog_Entry_Storable {
 
