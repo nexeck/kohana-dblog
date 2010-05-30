@@ -23,7 +23,7 @@ abstract class Kohana_DBlog {
 	                     array $substitutionValues = array(),
 	                     array $additionalData = array()) {
 		try {
-			Model_DBlog_Entry::factory(self::getInstance()->tableName)
+			Model_DBlog_Entry::factory()
 				->setType($type)
 				->setMessage($message)
 				->setDetails($details)
@@ -52,19 +52,7 @@ abstract class Kohana_DBlog {
 		return self::$instance;
 	}
 
-	protected function __construct() {
-		$this->tableName = $this->getTableNameFromConfig();
-	}
-
-	protected function getTableNameFromConfig() {
-		switch (Kohana::$environment) {
-			case Kohana::TESTING:
-				return Kohana::config('dblog.testing.db_table_name');
-			default:
-				return Kohana::config('dblog.default.db_table_name');
-		}
-	}
-
+	protected function __construct() {}
 	protected function __clone() {}
 
 }

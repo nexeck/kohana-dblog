@@ -5,11 +5,47 @@
  */
 class Model_DBlog_Entry_ORM extends ORM implements Model_DBlog_Entry_Storable {
 
-	public function __construct($tableName) {
-		$this->_table_name = $tableName;
+	public function __construct($id = NULL) {
+		$this->_table_name = (Kohana::$environment === Kohana::TESTING)
+			? Kohana::config('dblog.testing.db_table_name')
+			: Kohana::config('dblog.default.db_table_name');
 		$this->_primary_val = 'message';
-		parent::__construct();
-		$this->tstamp = time();
+		parent::__construct($id);
+		$this->_load();
+	}
+
+	public function getFields() {
+		return $this->_object;
+	}
+
+	public function getField($key) {
+		return $this->$key;
+	}
+
+	public function getFormattedField($key) {
+		switch ($key) {
+			case 'tstamp': return date('Y-m-d H:i:s', $this->$key);
+			default: return $this->$key;
+		}
+	}
+
+	public function fieldNameToLocalizedHeader($fieldName) {
+		try {
+			switch ($fieldName) {
+				case 'tstamp': return 'Date/time';
+				default: return __(Inflector::humanize(ucfirst($fieldName)));
+			}
+		} catch (Exception $e) {
+			throw new Kohana_Exception('Could not transform the field name :name', array(':name' => $fieldName));
+		}
+	}
+
+	public function limit($itemsPerPage) {
+		return parent::limit($itemsPerPage);
+	}
+
+	public function offset($offset) {
+		return parent::offset($offset);
 	}
 
 	public function setType($type) {
@@ -25,6 +61,11 @@ class Model_DBlog_Entry_ORM extends ORM implements Model_DBlog_Entry_Storable {
 	public function setDetails($details) {
 		$this->details = $details;
 		return $this;
+	}
+
+	public function save() {
+		$this->tstamp = time();
+		parent::save();
 	}
 
 	public function setSubstitutionValues(array $substitutionValues) {

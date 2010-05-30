@@ -1,25 +1,34 @@
-<?php if (is_array($logs) && is_array($logs[0])): ?>
+<?php if (is_array($logs) && count($logs) > 0): ?>
+<?php echo $pagination; ?>
 <table>
 	<thead>
 		<tr>
-		<?php foreach (array_keys($logs[0]) as $key): ?>
 			<th>
-				<?php echo $model->fieldNameToLocalizedHeader($key); ?>
+				<?php echo __('Date/time'); ?>
 			</th>
-		<?php endforeach; ?>
+			<th>
+				<?php echo __('Type'); ?>
+			</th>
+			<th>
+				<?php echo __('Message'); ?>
+			</th>
 			<th><!-- details --></th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php $rowNum = 0; foreach ($logs as &$log): // TODO filter the id, it should only be used for link generation ?>
+	<?php $rowNum = 0; foreach ($logs as &$log): ?>
 		<tr class="<?php echo ($rowNum++ % 2) ? 'even' : 'odd'; ?>">
-		<?php foreach ($log as &$value): ?>
-			<td>
-				<?php echo $value; ?>
+			<td class="nowrap">
+				<?php echo $log->getFormattedField('tstamp'); ?>
 			</td>
-		<?php endforeach; ?>
 			<td>
-				<a href="<?php echo Request::instance()->uri().'/'.URL::query(array('log_id' => $log['id'])); ?>">
+				<?php echo $log->type; ?>
+			</td>
+			<td>
+				<?php echo Text::limit_chars($log->message, 40, ' …', TRUE); ?>
+			</td>
+			<td>
+				<a href="<?php echo Request::instance()->uri().'/'.URL::query(array('log_id' => $log->pk())); ?>">
 					<?php echo __('Details'); ?>
 				</a>
 			</td>
@@ -27,4 +36,5 @@
 	<?php endforeach; ?>
 	</tbody>
 </table>
+<?php echo $pagination; ?>
 <?php endif; ?>
