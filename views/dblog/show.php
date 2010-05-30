@@ -12,3 +12,8 @@
 	<?php endforeach; ?>
 	</tbody>
 </table>
+<p>
+	<a href="<?php echo Request::$referrer; ?>">
+		<?php echo __('Back'); ?>
+	</a>
+</p>
