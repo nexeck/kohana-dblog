@@ -26,7 +26,7 @@ class Controller_DBlog extends Controller {
 	* @todo implement sorting and filtering
 	*/
 	public function action_index() {
-		$logEntriesQuery = DB::select('id', 'tstamp', 'type', 'message')
+		$logEntriesQuery = DB::select('id')
 			->from(DBlog::getTableName())
 			->order_by('tstamp', 'DESC');
 		$pagination = Pagination::factory(array(
