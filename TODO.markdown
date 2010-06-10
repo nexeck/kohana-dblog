@@ -1,0 +1,1 @@
+-	Write test for DBlog::getTableName()

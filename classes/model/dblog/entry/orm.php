@@ -8,9 +8,7 @@
 class Model_DBlog_Entry_ORM extends ORM implements Model_DBlog_Entry_Storable {
 
 	public function __construct($id = NULL) {
-		$this->_table_name = (Kohana::$environment === Kohana::TESTING)
-			? Kohana::config('dblog.testing.db_table_name')
-			: Kohana::config('dblog.default.db_table_name');
+		$this->_table_name = DBlog::getTableName();
 		$this->_primary_val = 'message';
 		parent::__construct($id);
 		$this->_load();

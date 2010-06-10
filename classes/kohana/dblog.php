@@ -41,6 +41,10 @@ abstract class Kohana_DBlog {
 		self::add($type, $message, '', array(), array('tstamp' => $time));
 	}
 
+	public static function getTableName() {
+		return self::getInstance()->tableName;
+	}
+
 	protected function handleException(DBlog_Exception $e) {
 		throw $e;
 	}
@@ -52,7 +56,12 @@ abstract class Kohana_DBlog {
 		return self::$instance;
 	}
 
-	protected function __construct() {}
+	protected function __construct() {
+		$this->tableName = (Kohana::$environment === Kohana::TESTING)
+			? Kohana::config('dblog.testing.db_table_name')
+			: Kohana::config('dblog.default.db_table_name');
+	}
+
 	protected function __clone() {}
 
 }
