@@ -22,34 +22,20 @@ class Controller_DBlog extends Controller {
 	}
 
 	/**
-	* @todo clean up!
 	* @todo implement sorting and filtering
 	*/
 	public function action_index() {
-		$logEntriesQuery = DB::select('id')
-			->from(DBlog::getTableName())
-			->order_by('tstamp', 'DESC');
-		$pagination = Pagination::factory(array(
-			'total_items' => $logEntriesQuery->execute()->count(),
-			'items_per_page' => 20,
-			'auto_hide' => TRUE,
-		));
-		$logs = array();
-		$logEntriesResult = $logEntriesQuery
-			->limit($pagination->items_per_page)
-			->offset($pagination->offset)
-			->execute()
-			->as_array();
-		foreach ($logEntriesResult as $log) {
-			$logs[] = Model_DBlog_Entry::factory($log['id']);
-		}
+		$model = Model::factory('DBlog');
+		$orderBy = 'tstamp';
+		$orderDir = 'DESC';
+		$filters = array();
 // 		strtr($pagination->render(), array(
 // 			Request::current()->uri => Request::$instance->uri,
 // 		));
 		$this->request->response = View::factory('dblog/index', array(
-			'pagination' => $pagination, // Passing $pagination->render() to the view will lead to wrong urls!
-										 // Why does this even work? Just echoing the Pagination object in the view!
-			'logs' => $logs,
+			'logs' => $model->getLogEntries($orderBy, $orderDir, $filters),
+			'pagination' => $model->getPagination(), // Passing $pagination->render() to the view will lead to wrong urls!
+													 // Why does this even work? Just echoing the Pagination object in the view!
 		));
 	}
 
