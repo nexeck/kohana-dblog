@@ -4,10 +4,14 @@
 	<thead>
 		<tr>
 			<th>
-				<?php echo __('Date/time'); ?>
+				<a href="<?php echo URL::site(Request::instance()->uri()).'/'.URL::query(array('order_by' => 'tstamp', 'order_dir' => $orders->tstamp)); ?>">
+					<?php echo __('Date/time'); ?>
+				</a>
 			</th>
 			<th>
-				<?php echo __('Type'); ?>
+				<a href="<?php echo URL::site(Request::instance()->uri()).'/'.URL::query(array('order_by' => 'type', 'order_dir' => $orders->type)); ?>">
+					<?php echo __('Type'); ?>
+				</a>
 			</th>
 			<th>
 				<?php echo __('Message'); ?>
@@ -28,7 +32,7 @@
 				<?php echo Text::limit_chars($log->message, 40, ' …', TRUE); ?>
 			</td>
 			<td>
-				<a href="<?php echo Request::instance()->uri().'/'.URL::query(array('log_id' => $log->pk())); ?>">
+				<a href="<?php echo URL::site(Request::instance()->uri()).'/'.URL::query(array('log_id' => $log->pk())); ?>">
 					<?php echo __('Details'); ?>
 				</a>
 			</td>

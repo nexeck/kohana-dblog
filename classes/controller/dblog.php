@@ -22,17 +22,21 @@ class Controller_DBlog extends Controller {
 	}
 
 	/**
+	* @todo clean up
 	* @todo implement sorting and filtering
 	*/
 	public function action_index() {
 		$model = Model::factory('DBlog');
-		$orderBy = 'tstamp';
+		$orderBy = isset($_GET['order_by']) ? $_GET['order_by'] : 'tstamp';
 		$orderDir = 'DESC';
+		if (isset($_GET['order_dir']) && (strtoupper($_GET['order_dir']) != 'DESC'))
+			$orderDir = 'ASC';
 		$filters = array();
 // 		strtr($pagination->render(), array(
 // 			Request::current()->uri => Request::$instance->uri,
 // 		));
 		$this->request->response = View::factory('dblog/index', array(
+			'orders' => Model::factory('DBlog_Order'),
 			'logs' => $model->getLogEntries($orderBy, $orderDir, $filters),
 			'pagination' => $model->getPagination(), // Passing $pagination->render() to the view will lead to wrong urls!
 													 // Why does this even work? Just echoing the Pagination object in the view!

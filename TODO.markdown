@@ -1,1 +1,2 @@
 -	Write test for DBlog::getTableName()
+-	Mark current sorting in list view
