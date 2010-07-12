@@ -3,7 +3,8 @@
  * @package    Kohana/dblog
  * @author     Bastian Bräu
  */
-abstract class Kohana_DBlog {
+abstract class Kohana_DBlog
+{
 
 	protected static $instance;
 
@@ -24,11 +25,11 @@ abstract class Kohana_DBlog {
 	                     array $additionalData = array()) {
 		try {
 			Model_DBlog_Entry::factory()
-				->setType($type)
-				->setMessage($message)
-				->setDetails($details)
-				->setSubstitutionValues($substitutionValues)
- 				->setAdditionalData($additionalData)
+				->set_type($type)
+				->set_message($message)
+				->set_details($details)
+				->set_substitution_values($substitutionValues)
+ 				->set_additional_data($additionalData)
 				->save();
 		} catch (Exception $e) {
 			self::getInstance()->handleException(new DBlog_Exception('Log entry could not be saved: '.$e->getMessage()));

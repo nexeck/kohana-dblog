@@ -23,7 +23,7 @@
 	<?php $rowNum = 0; foreach ($logs as &$log): ?>
 		<tr class="<?php echo ($rowNum++ % 2) ? 'even' : 'odd'; ?>">
 			<td class="nowrap">
-				<?php echo $log->getFormattedField('tstamp'); ?>
+				<?php echo $log->get_formatted_field('tstamp'); ?>
 			</td>
 			<td>
 				<?php echo $log->type; ?>

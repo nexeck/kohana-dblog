@@ -5,77 +5,97 @@
  * @todo       Move all the logic which is not ORM related to a seperate class
  *             so that other implementation can use it.
  */
-class Model_DBlog_Entry_ORM extends ORM implements Model_DBlog_Entry_Storable {
+class Model_DBlog_Entry_ORM extends ORM implements Model_DBlog_Entry_Storable
+{
 
-	public function __construct($id = NULL) {
+	public function __construct($id = NULL)
+	{
 		$this->_table_name = DBlog::getTableName();
 		$this->_primary_val = 'message';
 		parent::__construct($id);
 		$this->_load();
 	}
 
-	public function getFields() {
+	public function get_fields()
+	{
 		return $this->_object;
 	}
 
-	public function getField($key) {
+	public function get_field($key)
+	{
 		return $this->$key;
 	}
 
-	public function getFormattedField($key) {
-		switch ($key) {
+	public function get_formatted_field($key)
+	{
+		switch ($key)
+		{
 			case 'tstamp': return date('Y-m-d H:i:s', $this->$key);
 			default: return $this->$key;
 		}
 	}
 
-	public function fieldNameToLocalizedHeader($fieldName) {
-		try {
-			switch ($fieldName) {
+	public function field_name_to_localized_header($field_name)
+	{
+		try
+		{
+			switch ($field_name)
+			{
 				case 'tstamp': return 'Date/time';
-				default: return __(Inflector::humanize(ucfirst($fieldName)));
+				default: return __(Inflector::humanize(ucfirst($field_name)));
 			}
-		} catch (Exception $e) {
-			throw new Kohana_Exception('Could not transform the field name :name', array(':name' => $fieldName));
+		}
+		catch (Exception $e)
+		{
+			throw new DBlog_Exception('Could not transform the field name :name', array(':name' => $field_name));
 		}
 	}
 
-	public function limit($itemsPerPage) {
-		return parent::limit($itemsPerPage);
+	public function limit($items_per_page)
+	{
+		return parent::limit($items_per_page);
 	}
 
-	public function offset($offset) {
+	public function offset($offset)
+	{
 		return parent::offset($offset);
 	}
 
-	public function setType($type) {
+	public function set_type($type)
+	{
 		$this->type = strtoupper($type);
 		return $this;
 	}
 
-	public function setMessage($message) {
+	public function set_message($message)
+	{
 		$this->message = $message;
 		return $this;
 	}
 
-	public function setDetails($details) {
+	public function set_details($details)
+	{
 		$this->details = $details;
 		return $this;
 	}
 
-	public function save() {
+	public function save()
+	{
 		$this->tstamp = time();
 		parent::save();
 	}
 
-	public function setSubstitutionValues(array $substitutionValues) {
-		$this->message = strtr($this->message, $substitutionValues);
-		$this->details = strtr($this->details, $substitutionValues);
+	public function set_substitution_values(array $substitution_values)
+	{
+		$this->message = strtr($this->message, $substitution_values);
+		$this->details = strtr($this->details, $substitution_values);
 		return $this;
 	}
 
-	public function setAdditionalData(array $additionalData) {
-		foreach ($additionalData as $key => &$value) {
+	public function set_additional_data(array $additional_data)
+	{
+		foreach ($additional_data as $key => &$value)
+		{
 			$this->$key = $value;
 		}
 		return $this;
