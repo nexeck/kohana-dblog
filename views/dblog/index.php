@@ -1,4 +1,15 @@
-<?php if (is_array($logs) && count($logs) > 0): ?>
+<?php
+	if (is_array($logs) && count($logs) > 0):
+		$filters = Arr::get($_GET, 'log-filter', array());
+?>
+
+<?php echo Form::open(NULL, array('method' => 'GET')); ?>
+	<p>
+		<?php echo Form::label('log-filter-type', __('Type')); ?>
+		<?php echo Form::select('log-filter[type]', $filter_values['type'], Arr::get($filters, 'type'), array('id' => 'log-filter-type')); ?>
+		<?php echo Form::submit('log-filter[submit]', NULL); ?>
+	</p>
+<?php echo Form::close(); ?>
 <?php echo $pagination; ?>
 <table>
 	<thead>
@@ -37,4 +48,5 @@
 	</tbody>
 </table>
 <?php echo $pagination; ?>
+
 <?php endif; ?>

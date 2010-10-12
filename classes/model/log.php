@@ -39,4 +39,14 @@ class Model_Log extends ORM
 		return parent::save();
 	}
 
+	public function apply_filters($filter_src)
+	{
+		$filters = Arr::get($filter_src, 'log-filter', array());
+		if (isset($filters['type']) AND $filters['type'] !== '')
+		{
+			$this->where('type', '=', strtoupper($filters['type']));
+		}
+		return $this;
+	}
+
 }

@@ -18,7 +18,7 @@ class Controller_DBlog extends Controller
 
 	public function action_index()
 	{
-		$logs = ORM::factory('log');
+		$logs = ORM::factory('log')->apply_filters($_GET);
 		$counter = clone $logs;
 		$pagination = Pagination::factory(array(
 			'current_page'   => array('source' => 'query_string', 'key' => 'page'),
@@ -33,10 +33,27 @@ class Controller_DBlog extends Controller
 			->offset($pagination->offset)
 			->find_all()
 			->as_array();
+		$filters = $this->get_filters();
 		$view = View::factory('dblog/index')
 			->bind('logs', $logs)
+			->bind('filter_values', $filters)
 			->set('pagination', $pagination);
 		$this->request->response = $view;
+	}
+
+	protected function get_filters() {
+		return array(
+			'type' => $this->get_filter_type(),
+		);
+	}
+
+	protected function get_filter_type() {
+		$types = DB::select_array(array('type'))
+			->distinct(TRUE)
+			->from('logs')
+			->execute()
+			->as_array('type', 'type');
+		return Arr::merge($types, array('' => __('any')));
 	}
 
 	public function action_show()
