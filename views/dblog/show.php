@@ -1,19 +1,17 @@
 <table>
 	<tbody>
-	<?php $rowNum = 0; foreach (array_keys($log->get_fields()) as $key): ?>
-		<tr class="<?php echo ($rowNum++ % 2) ? 'even' : 'odd'; ?>">
+	<?php $row_num = 0; foreach ($log->as_array() as $key => $value): ?>
+		<tr class="<?php echo ($row_num++ % 2) ? 'even' : 'odd'; ?>">
 			<th>
-				<?php echo $log->field_name_to_localized_header($key); ?>
+				<?php echo $key; ?>
 			</th>
 			<td>
-				<?php echo $log->get_formatted_field($key); ?>
+				<?php echo HTML::chars($value); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
 </table>
 <p>
-	<a href="<?php echo Request::$referrer; ?>">
-		<?php echo __('Back'); ?>
-	</a>
+	<?php echo HTML::anchor(Request::$referrer, __('Back')); ?>
 </p>

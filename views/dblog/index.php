@@ -4,26 +4,22 @@
 	<thead>
 		<tr>
 			<th>
-				<a href="<?php echo URL::site(Request::instance()->uri()).'/'.URL::query(array('order_by' => 'tstamp', 'order_dir' => $orders->tstamp)); ?>">
-					<?php echo __('Date/time'); ?>
-				</a>
+				<?php echo __('Date/time'); ?>
 			</th>
 			<th>
-				<a href="<?php echo URL::site(Request::instance()->uri()).'/'.URL::query(array('order_by' => 'type', 'order_dir' => $orders->type)); ?>">
-					<?php echo __('Type'); ?>
-				</a>
+				<?php echo __('Type'); ?>
 			</th>
 			<th>
 				<?php echo __('Message'); ?>
 			</th>
-			<th><!-- details --></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-	<?php $rowNum = 0; foreach ($logs as &$log): ?>
-		<tr class="<?php echo ($rowNum++ % 2) ? 'even' : 'odd'; ?>">
+	<?php $row_num = 0; foreach ($logs as & $log): ?>
+		<tr class="<?php echo ($row_num++ % 2) ? 'even' : 'odd'; ?>">
 			<td class="nowrap">
-				<?php echo $log->get_formatted_field('tstamp'); ?>
+				<?php echo $log->tstamp; ?>
 			</td>
 			<td>
 				<?php echo $log->type; ?>
