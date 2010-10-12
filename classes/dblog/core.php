@@ -39,7 +39,7 @@ abstract class DBlog_Core
 	{
 		// TODO check time format (unix time stamp)
 		// TODO (?) split message on first : and use remainder as details
-		self::add($type, $message, '', array(), array('tstamp' => $time));
+		self::add($type, $message);
 	}
 
 	protected function handle_exception(DBlog_Exception $e)

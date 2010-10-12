@@ -20,4 +20,10 @@ class Model_Log extends ORM
 		return $this;
 	}
 
+	public function save()
+	{
+		$this->tstamp = time();
+		return parent::save();
+	}
+
 }
