@@ -6,6 +6,8 @@
 class Model_Log extends ORM
 {
 
+	public static $time_format = '%Y-%m-%d %H:%M:%S';
+
 	protected $_table_name = 'logs';
 	protected $_labels = array();
 	protected $_primary_key = 'id';
@@ -18,6 +20,17 @@ class Model_Log extends ORM
 			$this->$key = $value;
 		}
 		return $this;
+	}
+
+	public function __get($column) {
+		switch ($column) {
+			case 'tstamp':
+				$val = strftime(self::$time_format, parent::__get('tstamp'));
+				break;
+			default:
+				$val = parent::__get($column);
+		}
+		return $val;
 	}
 
 	public function save()
