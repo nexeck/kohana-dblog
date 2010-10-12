@@ -13,7 +13,7 @@ class DBlog_Writer extends Kohana_Log_Writer {
 	 */
 	public function write(array $messages) {
 		foreach ($messages as & $message) {
-			DBlog::add_kohana_message($message['type'], $message['body'], $message['time']);
+			DBlog::add_kohana_message($message['type'], $message['body']);
 		}
 	}
 
