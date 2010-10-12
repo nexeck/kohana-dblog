@@ -2,7 +2,7 @@
 
 ## Status
 
-### alpha
+### Beta
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Register the module in bootstrap.php:
 
 	Kohana::modules(array(
 		[...]
-		'dblog'      => MODPATH.'dblog',
+		'dblog' => MODPATH.'dblog',
 	));
 
 Create a database table, based on default.sql. Additional fields can be added.
@@ -24,12 +24,12 @@ Create a database table, based on default.sql. Additional fields can be added.
 If you want to store all Kohana::$log messages in the database too:
 
 1.	In bootstrap.php change
-
-		Kohana::$log->attach(new DBlog_Writer());
+		
+		Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
 
 	to
 
-		Kohana::$log->attach(new Kohana_Log_Db());
+		Kohana::$log->attach(new DBlog_Writer());
 
 	**Make sure this line appears after the call of Kohana::modules().**
 
@@ -37,31 +37,22 @@ If you want to store all Kohana::$log messages in the database too:
 
 		Kohana_Log::$timestamp = 'U';
 
-## Configuration
+## Basic usage
 
-TODO
+	DBlog::add('NOTICE', 'Log demo title', 'Log demo details: :params', array(':params' => chr(10).print_r($_GET, TRUE)));
 
 ## Using additional fields
 
-### Setting a default value (e.g. in bootstrap.php)
-
-TODO
-
-### Setting values on a per entry basis
-
 	DBlog::add('category', 'title', 'details', array(), array(
-		'myVarDump' => $myVar,
+		'client_ip' => getenv('REMOTE_ADDR'),
+		'url' => getenv('REQUEST_URI'),
 	));
 
 ## View
 
-Storing the rendered view of all log entries in *$log_table*:
+Storing the rendered view of all log entries in `$log_table`:
 
 	$log_table = Request::factory('dblog/index')->execute()->response;
-
-## Unit tests
-
-TODO
 
 ## License
 
