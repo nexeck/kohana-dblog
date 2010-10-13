@@ -23,8 +23,8 @@ class Controller_DBlog extends Controller
 		$pagination = Pagination::factory(array(
 			'current_page'   => array('source' => 'query_string', 'key' => 'page'),
 			'total_items'    => $counter->count_all(),
-			'items_per_page' => 20,
-			'view'           => 'pagination/floating',
+			'items_per_page' => Kohana::config('dblog.pagination.items_per_page'),
+			'view'           => Kohana::config('dblog.pagination.view'),
 			'auto_hide'      => TRUE,
 		));
 		$logs = $logs
@@ -37,7 +37,8 @@ class Controller_DBlog extends Controller
 		$view = View::factory('dblog/index')
 			->bind('logs', $logs)
 			->bind('filter_values', $filters)
-			->set('pagination', $pagination);
+			->set('filters', Arr::get($_GET, 'log-filter', array()))
+			->bind('pagination', $pagination);
 		$this->request->response = $view;
 	}
 
@@ -50,7 +51,7 @@ class Controller_DBlog extends Controller
 	protected function get_filter_type() {
 		$types = DB::select_array(array('type'))
 			->distinct(TRUE)
-			->from('logs')
+			->from(Kohana::config('dblog.table'))
 			->execute()
 			->as_array('type', 'type');
 		return Arr::merge($types, array('' => __('any')));

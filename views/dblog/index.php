@@ -1,10 +1,8 @@
-<?php
-	if (is_array($logs) && count($logs) > 0):
-		$filters = Arr::get($_GET, 'log-filter', array());
-?>
-
 <?php echo Form::open(NULL, array('method' => 'GET')); ?>
 	<p>
+		<b>
+			<?php echo __('Filter logs:'); ?>
+		</b>
 		<?php echo Form::label('log-filter-type', __('Type')); ?>
 		<?php echo Form::select('log-filter[type]', $filter_values['type'], Arr::get($filters, 'type'), array('id' => 'log-filter-type')); ?>
 		<?php echo Form::submit('log-filter[submit]', NULL); ?>
@@ -48,5 +46,3 @@
 	</tbody>
 </table>
 <?php echo $pagination; ?>
-
-<?php endif; ?>

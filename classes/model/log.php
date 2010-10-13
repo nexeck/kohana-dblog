@@ -72,4 +72,15 @@ class Model_Log extends ORM
 		return Arr::get($this->_labels, __($column), $column);
 	}
 
+	/**
+	 * Get table name from config
+	 *
+	 * @return  void
+	 */
+	protected function _initialize()
+	{
+		$this->_table_name = Kohana::config('dblog.table');
+		parent::_initialize();
+	}
+
 }

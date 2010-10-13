@@ -24,7 +24,7 @@ Create a database table, based on default.sql. Additional fields can be added.
 If you want to store all Kohana::$log messages in the database too:
 
 1.	In bootstrap.php change
-		
+
 		Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
 
 	to
@@ -48,11 +48,18 @@ If you want to store all Kohana::$log messages in the database too:
 		'url' => getenv('REQUEST_URI'),
 	));
 
-## View
+## Configuration (optional)
 
-Storing the rendered view of all log entries in `$log_table`:
+-	Copy `modules/dblog/config/dblog.php` to `application/config/`
+-	You can change the log table name and pagination settings
 
-	$log_table = Request::factory('dblog/index')->execute()->response;
+## Controller / rendering the log table
+
+The controller should not be accessed directly. You can embed it in your controller with an internal request.
+
+Example with [`Controller_Demo`](http://kerkness.ca/wiki/doku.php?id=template-site:extending_the_template_controller):
+
+	$this->template->content = Request::factory('dblog/index')->execute()->response;
 
 ## License
 
