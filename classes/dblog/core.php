@@ -37,7 +37,6 @@ abstract class DBlog_Core
 
 	public static function add_kohana_message($type, $message)
 	{
-		// TODO check time format (unix time stamp)
 		// TODO (?) split message on first : and use remainder as details
 		self::add($type, $message);
 	}

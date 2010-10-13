@@ -23,19 +23,15 @@ Create a database table, based on default.sql. Additional fields can be added.
 
 If you want to store all Kohana::$log messages in the database too:
 
-1.	In bootstrap.php change
+In `bootstrap.php` change
 
-		Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
+	Kohana::$log->attach(new Kohana_Log_File(APPPATH.'logs'));
 
-	to
+to
 
-		Kohana::$log->attach(new DBlog_Writer());
+	Kohana::$log->attach(new DBlog_Writer());
 
-	**Make sure this line appears after the call of Kohana::modules().**
-
-2.	In the same file add
-
-		Kohana_Log::$timestamp = 'U';
+**Make sure this line appears after the call of Kohana::modules().**
 
 ## Basic usage
 
