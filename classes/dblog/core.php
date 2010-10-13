@@ -37,14 +37,15 @@ abstract class DBlog_Core
 
 	public static function add_kohana_message($type, $message)
 	{
-		$colon_pos = strpos($message, ':');
-		if ( (int) $colon_pos > 0)
+		$details = '';
+		if (Kohana::config('dblog.split') === TRUE)
 		{
-			$details = trim(substr($message, $colon_pos + 1));
-			$message = trim(substr($message, 0, $colon_pos));
-		} else
-		{
-			$details = '';
+			$colon_pos = strpos($message, ':');
+			if ( (int) $colon_pos > 0)
+			{
+				$details = trim(substr($message, $colon_pos + 1));
+				$message = trim(substr($message, 0, $colon_pos));
+			 }
 		}
 		self::add($type, $message, $details);
 	}

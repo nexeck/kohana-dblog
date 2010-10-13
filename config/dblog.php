@@ -4,6 +4,8 @@ return array(
 
 	'table' => 'logs',
 
+	'split' => TRUE,
+
 	'pagination' => array(
 		'items_per_page' => 20,
 		'view' => 'pagination/floating',

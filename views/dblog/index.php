@@ -9,7 +9,7 @@
 	</p>
 <?php echo Form::close(); ?>
 <?php echo $pagination; ?>
-<table>
+<table cellspacing="0" cellpadding="0">
 	<thead>
 		<tr>
 			<th>
