@@ -37,8 +37,16 @@ abstract class DBlog_Core
 
 	public static function add_kohana_message($type, $message)
 	{
-		// TODO (?) split message on first : and use remainder as details
-		self::add($type, $message);
+		$colon_pos = strpos($message, ':');
+		if ( (int) $colon_pos > 0)
+		{
+			$details = trim(substr($message, $colon_pos + 1));
+			$message = trim(substr($message, 0, $colon_pos));
+		} else
+		{
+			$details = '';
+		}
+		self::add($type, $message, $details);
 	}
 
 	protected function handle_exception(DBlog_Exception $e)
