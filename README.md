@@ -57,6 +57,17 @@ Example with [`Controller_Demo`](http://kerkness.ca/wiki/doku.php?id=template-si
 
 	$this->template->content = Request::factory('dblog/index')->execute()->response;
 
+## Ignoring certain log types
+
+You can omit log entries of certain types (e.g. in production environments) by setting the static `$omit_types` property.
+
+Example in `bootstrap.php`:
+
+	if (Kohana::$environment === Kohana::PRODUCTION)
+	{
+		DBlog::$omit_types = array('NOTICE');
+	}
+
 ## License
 
 [ISC License](http://opensource.org/licenses/isc-license.txt)

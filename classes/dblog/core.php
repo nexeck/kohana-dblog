@@ -6,6 +6,8 @@
 abstract class DBlog_Core
 {
 
+	public static $omit_types = array();
+
 	protected static $instance;
 
 	/**
@@ -22,14 +24,18 @@ abstract class DBlog_Core
 	                     array $subst = array(),
 	                     array $additional_data = array())
 	{
+		$type = strtoupper($type);
 		try {
-			$type = strtoupper($type);
-			$log = ORM::factory('log');
-			$log->type = $type;
-			$log->message = strtr($message, $subst);
-			$log->details = strtr($details, $subst);
- 			$log->set_additional_data($additional_data);
-			$log->save();
+			if (FALSE === in_array($type, self::$omit_types))
+			{
+				$type = strtoupper($type);
+				$log = ORM::factory('log');
+				$log->type = $type;
+				$log->message = strtr($message, $subst);
+				$log->details = strtr($details, $subst);
+				$log->set_additional_data($additional_data);
+				$log->save();
+			}
 		} catch (Exception $e) {
 			self::instance()->handle_exception(new DBlog_Exception('Log entry could not be saved: '.$e->getMessage()));
 		}
