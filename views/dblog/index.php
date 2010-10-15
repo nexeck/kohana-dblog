@@ -5,7 +5,7 @@
 		</b>
 		<?php echo Form::label('log-filter-type', __('Type')); ?>
 		<?php echo Form::select('log-filter[type]', $filter_values['type'], Arr::get($filters, 'type'), array('id' => 'log-filter-type')); ?>
-		<?php echo Form::submit('log-filter[submit]', NULL); ?>
+		<?php echo Form::submit(NULL, NULL); ?>
 	</p>
 <?php echo Form::close(); ?>
 <?php echo $pagination; ?>
