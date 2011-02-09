@@ -8,11 +8,11 @@ class Controller_DBlog extends Controller
 
 	public function before()
 	{
-		$this->deny_direct_access();
+		//$this->deny_direct_access();
 		parent::before();
 		if (isset($_GET['log_id']))
 		{
-			$this->request->action = 'show';
+			$this->request->action('show');
 		}
 	}
 
@@ -28,7 +28,7 @@ class Controller_DBlog extends Controller
 			'auto_hide'      => TRUE,
 		));
 		$logs = $logs
-			->order_by('tstamp', 'DESC')
+			->order_by('created', 'DESC')
 			->limit($pagination->items_per_page)
 			->offset($pagination->offset)
 			->find_all()
@@ -39,7 +39,7 @@ class Controller_DBlog extends Controller
 			->bind('filter_values', $filters)
 			->set('filters', Arr::get($_GET, 'log-filter', array()))
 			->bind('pagination', $pagination);
-		$this->request->response = $view;
+		$this->response->body($view);
 	}
 
 	protected function get_filters() {
@@ -59,13 +59,13 @@ class Controller_DBlog extends Controller
 
 	public function action_show()
 	{
-		$this->request->response = View::factory('dblog/show')
-			->set('log', ORM::factory('log', (int) $_GET['log_id']));
+		$this->response->body(View::factory('dblog/show')
+			->set('log', ORM::factory('log', (int) $this->request->param('id'))));
 	}
 
 	protected function deny_direct_access()
 	{
-		if ($this->request === Request::$instance)
+		if ($this->request === Request::current())
 		{
 			throw new DBlog_Exception('No direct access allowed');
 		}

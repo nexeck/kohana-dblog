@@ -5,7 +5,7 @@
  * @package    dblog
  * @author     Bastian Bräu
  */
-class DBlog_Writer extends Kohana_Log_Writer
+class DBlog_Writer extends Log_Writer
 {
 
 	/**
@@ -13,10 +13,10 @@ class DBlog_Writer extends Kohana_Log_Writer
 	 * @return  void
 	 */
 	public function write(array $messages)
-	{
+	{    
 		foreach ($messages as & $message)
 		{
-			DBlog::add_kohana_message($message['type'], $message['body']);
+			DBlog::add_kohana_message($this->_log_levels[$message['level']], $message['body']);
 		}
 	}
 

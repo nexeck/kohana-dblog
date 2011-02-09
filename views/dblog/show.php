@@ -13,5 +13,5 @@
 	</tbody>
 </table>
 <p>
-	<?php echo HTML::anchor(Request::$referrer, __('Back')); ?>
+	<?php echo HTML::anchor(Request::current()->referrer(), __('Back')); ?>
 </p>

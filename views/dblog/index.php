@@ -1,4 +1,4 @@
-<?php echo Form::open(NULL, array('method' => 'GET')); ?>
+<?php echo Form::open(Request::current()->uri(), array('method' => 'GET')); ?>
 	<p>
 		<b>
 			<?php echo __('Filter logs:'); ?>
@@ -28,7 +28,8 @@
 	<?php $row_num = 0; foreach ($logs as & $log): ?>
 		<tr class="<?php echo ($row_num++ % 2) ? 'even' : 'odd'; ?>">
 			<td class="nowrap">
-				<?php echo $log->tstamp; ?>
+
+				<?php echo date('Y.m.d H:i:s', $log->created); ?>
 			</td>
 			<td>
 				<?php echo $log->type; ?>
@@ -37,7 +38,7 @@
 				<?php echo Text::limit_chars($log->message, 40, ' …', TRUE); ?>
 			</td>
 			<td>
-				<a href="<?php echo URL::site(Request::instance()->uri()).'/'.URL::query(array('log_id' => $log->pk())); ?>">
+				<a href="<?php echo URL::site(Request::current()->controller().'/show/'.$log->pk()); ?>">
 					<?php echo __('Details'); ?>
 				</a>
 			</td>

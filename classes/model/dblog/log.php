@@ -6,7 +6,7 @@
 class Model_DBlog_Log extends ORM
 {
 
-	public static $time_format = '%Y-%m-%d %H:%M:%S';
+	protected $_created_column = array('column' => 'created', 'format' => TRUE);
 
 	protected $_labels = array(
 		'id'      => 'ID',
@@ -29,24 +29,6 @@ class Model_DBlog_Log extends ORM
 		return $this;
 	}
 
-	public function __get($column) {
-		switch ($column)
-		{
-			case 'tstamp':
-				$val = strftime(self::$time_format, parent::__get('tstamp'));
-				break;
-			default:
-				$val = parent::__get($column);
-		}
-		return $val;
-	}
-
-	public function save()
-	{
-		$this->tstamp = time();
-		return parent::save();
-	}
-
 	public function apply_filters($filter_src)
 	{
 		$filters = Arr::get($filter_src, 'log-filter', array());
@@ -55,21 +37,6 @@ class Model_DBlog_Log extends ORM
 			$this->where('type', '=', strtoupper($filters['type']));
 		}
 		return $this;
-	}
-
-	public function as_array()
-	{
-		$object = array();
-		foreach ($this->_object as $key => $val)
-		{
-			$object[$this->label($key)] = $this->__get($key);
-		}
-		// omitted $this->_related processing from super class
-		return $object;
-	}
-
-	public function label($column) {
-		return Arr::get($this->_labels, __($column), $column);
 	}
 
 	/**

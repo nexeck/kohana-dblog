@@ -28,7 +28,6 @@ abstract class DBlog_Core
 		try {
 			if (FALSE === in_array($type, self::$omit_types))
 			{
-				$type = strtoupper($type);
 				$log = ORM::factory('log');
 				$log->type = $type;
 				$log->message = strtr($message, $subst);
@@ -42,7 +41,7 @@ abstract class DBlog_Core
 	}
 
 	public static function add_kohana_message($type, $message)
-	{
+	{    
 		$details = '';
 		if (Kohana::config('dblog.split') === TRUE)
 		{
